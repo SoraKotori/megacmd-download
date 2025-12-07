@@ -1,0 +1,46 @@
+name: Build and Publish Docker image
+
+on:
+  push:
+    branches:
+      - main
+  # 可選：打 tag 時也出 image
+  tags:
+    - 'v*.*.*'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write   # 這行一定要有，才有權 push 到 ghcr
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/megacmd-download
+          tags: |
+            type=ref,event=branch          # main → :main
+            type=ref,event=tag             # v1.2.3 → :v1.2.3
+            type=sha                       # :sha-xxxx
+            type=raw,value=latest,enable={{is_default_branch}}  # main 分支額外標 :latest
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
