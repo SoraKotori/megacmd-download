@@ -1,4 +1,3 @@
-# .github/workflows/build-and-push.yaml
 name: Build and push Docker image to GHCR
 
 on:
@@ -31,4 +30,4 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ toLower(github.repository_owner) }}/megacmd-download:latest
+            ghcr.io/sorakotori/megacmd-download:latest
