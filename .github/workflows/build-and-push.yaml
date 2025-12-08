@@ -31,4 +31,4 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/megacmd-download:latest
+            ghcr.io/${{ toLower(github.repository_owner) }}/megacmd-download:latest
