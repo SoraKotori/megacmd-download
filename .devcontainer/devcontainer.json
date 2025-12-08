@@ -1,0 +1,22 @@
+{
+    "name": "megacmd-download",
+    "build": {
+        "context": "..",
+        "dockerfile": "../Dockerfile",
+        "target": "development"
+    },
+    "mounts": [
+        {
+            "type": "bind",
+            "source": "/etc/machine-id",
+            "target": "/etc/machine-id"
+        }
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "docker.docker"
+            ]
+        }
+    }
+}
