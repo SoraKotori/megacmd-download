@@ -7,9 +7,16 @@ MEGA_LOCAL_PATH="${MEGA_LOCAL_PATH:-/localpath}"
 
 # 避免重複執行 cleanup
 SHUTTING_DOWN=false
-cleanup() {
+
+cleanup()
+{
     $SHUTTING_DOWN && return
     SHUTTING_DOWN=true
+
+    if ! pgrep -x "mega-cmd-server" >/dev/null 2>&1; then
+        echo "[INFO] Cleanup: mega-cmd-server not running; skip mega-quit."
+        return
+    fi
 
     echo "[INFO] Running cleanup: calling mega-quit..."
     if mega-quit >/dev/null 2>&1; then
