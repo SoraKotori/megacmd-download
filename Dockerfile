@@ -25,6 +25,5 @@ FROM base AS runtime
 
 # 複製 entrypoint
 COPY entrypoint.sh entrypoint.sh
-RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
