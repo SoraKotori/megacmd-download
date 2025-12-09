@@ -13,17 +13,17 @@ cleanup()
     $SHUTTING_DOWN && return
     SHUTTING_DOWN=true
 
-    if ! pgrep -x "mega-cmd-server" >/dev/null 2>&1; then
+    if ! pkill -0 mega-cmd-server; then
         echo "[INFO] Cleanup: mega-cmd-server not running; skip mega-quit."
         return
     fi
 
     echo "[INFO] Running cleanup: calling mega-quit..."
-    if mega-quit >/dev/null 2>&1; then
+    if mega-quit; then
         echo "[INFO] Waiting for mega-cmd-server to exit..."
 
         # 等待 mega-cmd-server 完全退出，避免提早返回
-        while pgrep -x "mega-cmd-server" >/dev/null 2>&1; do
+        while pkill -0 mega-cmd-server; do
             sleep 1
         done
 
@@ -42,7 +42,7 @@ echo "[INFO] Remote path: ${MEGA_REMOTE_PATH}"
 echo "[INFO] Local  path: ${MEGA_LOCAL_PATH}"
 
 # 先用 mega-whoami 嘗試復原既有 session
-if mega-whoami >/dev/null 2>&1; then
+if mega-whoami; then
     echo "[INFO] Session resumed successfully."
 else
     echo "[INFO] Not logged in yet. Trying to login..."
