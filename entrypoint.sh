@@ -13,12 +13,15 @@ cleanup()
     SHUTTING_DOWN=true
 
     if ! pkill -0 mega-cmd-server; then
-        echo "[INFO] Cleanup: mega-cmd-server not running, skip mega-quit"
+        echo "[INFO] Cleanup: mega-cmd-server not running, skip shutdown"
         return
     fi
 
-    echo "[INFO] Running cleanup: calling mega-quit..."
-    if mega-quit; then
+    echo "[INFO] Running cleanup: cancelling all transfers..."
+    mega-transfers -c -a || echo "[WARN] Failed to cancel transfers."
+
+    echo "[INFO] Running cleanup: stopping mega-cmd-server..."
+    if pkill mega-cmd-server; then
         echo "[INFO] Waiting for mega-cmd-server to exit..."
 
         # 等待 mega-cmd-server 完全退出，避免提早返回
@@ -28,7 +31,7 @@ cleanup()
 
         echo "[INFO] Cleanup done."
     else
-        echo "[INFO] Cleanup: mega-quit not needed or failed (server may not be running)."
+        echo "[INFO] Cleanup: stopping mega-cmd-server failed."
     fi
 }
 
