@@ -28,6 +28,7 @@ RUN apt-get update && \
 FROM base AS runtime
 
 # 複製 entrypoint
-COPY entrypoint.sh entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+# Use an absolute path so Kubernetes can override workingDir without breaking startup.
+ENTRYPOINT ["/entrypoint.sh"]
